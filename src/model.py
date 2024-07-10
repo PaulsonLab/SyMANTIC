@@ -8,10 +8,10 @@ Created on Wed May 17 09:22:50 2023
 """
 
 
-from . import FeatureSpaceConstruction as fc
-from . import Regressor as sr
-from . import DimensionalFeatureSpaceConstruction as dfc
-from . import Regressor_dimension as srd
+import FeatureSpaceConstruction as fc
+import Regressor as sr
+import DimensionalFeatureSpaceConstruction as dfc
+import Regressor_dimension as srd
 
 import sys
 import time
