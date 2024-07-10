@@ -1251,7 +1251,7 @@ class feature_space_construction:
             
             print('************************************************ Implementing Autodepth and number of terms functionality... ************************************************ \n')
             
-            from .Regressor_dimension import Regressor
+            from Regressor_dimension import Regressor
             #import Regressor_dimension as srd
             
             i = 1
