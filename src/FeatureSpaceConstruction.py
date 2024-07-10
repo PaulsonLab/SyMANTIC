@@ -409,7 +409,7 @@ class feature_space_construction:
         print('************************************************ Implementing Automatic Expansion and construction of sparse models..!!! ************************************************ \n')
         
         
-        from .Regressor import Regressor
+        from Regressor import Regressor
         
         i = 1
         
