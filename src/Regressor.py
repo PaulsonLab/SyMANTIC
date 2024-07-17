@@ -179,14 +179,14 @@ class Regressor:
     def regressor_fit(self):
         
         if self.x.shape[1] > self.sis_features*self.dimension :
-            print('\n')
+            if self.disp: print( '\n')
             
-            print(f"************************************************ Starting sparse model building in {self.device} ************************************************ \n")
+            if self.disp: print( f"************************************************ Starting sparse model building in {self.device} ************************************************ \n")
             
-            print('\n')
+            if self.disp: print( '\n')
             
         else:
-            print('************************************************ Given Number of features in SIS screening is greater than the feature space created, changing the SIS features to shape of features created ************************************************ \n')
+            if self.disp: print( '************************************************ Given Number of features in SIS screening is greater than the feature space created, changing the SIS features to shape of features created ************************************************ \n')
             
             self.sis_features = self.x.shape[1]
             
@@ -256,13 +256,13 @@ class Regressor:
                     
                     equation = str(float(coefficient)) + '*' + str(self.names[int(selected_index)]) + '+' + str(float(intercept))
                     
-                    print('Equation: ', equation)
+                    if self.disp: print( 'Equation: ', equation)
                     
-                    print('\n')
+                    if self.disp: print( '\n')
                     
-                    print('RMSE: ', rmse)
+                    if self.disp: print( 'RMSE: ', rmse)
                     
-                    print('R2::',r2)
+                    if self.disp: print( 'R2::',r2)
                     
                 else:
                     
@@ -272,19 +272,19 @@ class Regressor:
                     
                     equation = str(float(coefficient)) + '*' + str(self.names[int(selected_index)])  + str(float(intercept))
                     
-                    print('Equation: ', equation)
+                    if self.disp: print( 'Equation: ', equation)
                     
-                    print('\n')
+                    if self.disp: print( '\n')
                     
-                    print('RMSE: ', rmse)
+                    if self.disp: print( 'RMSE: ', rmse)
                     
-                    print('R2::',r2)
+                    if self.disp: print( 'R2::',r2)
                     
-                print('\n')
+                if self.disp: print( '\n')
                 
-                print('************************************************ Time taken to generate one dimensional equation: ', time.time()-start_1D,' seconds ************************************************ \n')
+                if self.disp: print( '************************************************ Time taken to generate one dimensional equation: ', time.time()-start_1D,' seconds ************************************************ \n')
                 
-                print('\n')
+                if self.disp: print( '\n')
                 
                 if self.device == 'cuda':torch.cuda.empty_cache()
                 
@@ -300,8 +300,8 @@ class Regressor:
                 
                 for k in range(len(terms)):
                     
-                    print(f'{k+1} term in the equation is {terms[k]}')
-                    print('\n')
+                    if self.disp: print( f'{k+1} term in the equation is {terms[k]}')
+                    if self.disp: print( '\n')
 
                     if coefs.flatten()[k] > 0:
                         
@@ -311,18 +311,18 @@ class Regressor:
                         
                         equation = equation + (str(terms[k])) + '  '
 
-                print('Equation: ',equation[:len(equation)-1])
-                print('\n')
+                if self.disp: print( 'Equation: ',equation[:len(equation)-1])
+                if self.disp: print( '\n')
 
-                print('Intercept:', float(intercept))
-                print('\n')
+                if self.disp: print( 'Intercept:', float(intercept))
+                if self.disp: print( '\n')
 
-                print('RMSE:',float(rmse))
-                print('\n')
+                if self.disp: print( 'RMSE:',float(rmse))
+                if self.disp: print( '\n')
                 
-                print('R2::',r2)
+                if self.disp: print( 'R2::',r2)
 
-                print(f'************************************************ Time taken for {i} dimension is: ', time.time()-start,' seconds ************************************************ \n')
+                if self.disp: print( f'************************************************ Time taken for {i} dimension is: ', time.time()-start,' seconds ************************************************ \n')
                 
                 if self.device == 'cuda': torch.cuda.empty_cache()
                 

@@ -39,8 +39,8 @@ class feature_space_construction:
     
     def __init__(self,df,operators=None,relational_units = None,initial_screening = None,no_of_operators=None,device='cpu',dimensionality=None,metrics=[0.06,0.995],output_dim=None):
     
-      print(f'************************************* Starting Feature Space Construction in {device} ****************************************************************')
-      print('\n')
+      if self.disp: print(f'************************************* Starting Feature Space Construction in {device} ****************************************************************')
+      if self.disp: print('\n')
       '''
       ###########################################################################################
     
@@ -67,15 +67,15 @@ class feature_space_construction:
       
       else:
           
-          print('************************************************ WARNING:: INPUT OPERATOR SET IS NOT PROVIDED, WILL BE USING THE DEFAULT SET OF OPERATORS WHICH MIGHT TAKE MEMORY DEPENDIN THE FEATURE SPACE PROVIDED.. ********************************************** \n')
+          if self.disp: print('************************************************ WARNING:: INPUT OPERATOR SET IS NOT PROVIDED, WILL BE USING THE DEFAULT SET OF OPERATORS WHICH MIGHT TAKE MEMORY DEPENDIN THE FEATURE SPACE PROVIDED.. ********************************************** \n')
           self.operators = ['+','-','*','/','exp','sin','cos','tanh','pow(1/2)','pow(1/3)','log','ln','^-1','pow(2)','pow(3)','exp(-1)','/2','+1','-1','/2pi','*2pi']
           
       self.device = torch.device(device)
       
-      print(f'************************************ Provided Operator Set to perform Symbolic Regression is:: {self.operators} ************************************************************* \n')
+      if self.disp: print(f'************************************ Provided Operator Set to perform Symbolic Regression is:: {self.operators} ************************************************************* \n')
     
       # Filter the dataframe by removing the categorical datatypes and zero variance feature variables
-      print('***************************************  Removing the categorical variable columns, if there are any!!  *********************************************************** \n')
+      if self.disp: print('***************************************  Removing the categorical variable columns, if there are any!!  *********************************************************** \n')
       
       self.df = self.df.select_dtypes(include=['float64','int64'])
       
@@ -88,7 +88,7 @@ class feature_space_construction:
       
       if self.dimensionality !=None:
           
-          print('**********************************************************  Extracting the dimensions of the same variables and will perform the feature expansion accordingly.... *********************************************************************** \n')
+          if self.disp: print('**********************************************************  Extracting the dimensions of the same variables and will perform the feature expansion accordingly.... *********************************************************************** \n')
           
           self.relational_units = relational_units
           
@@ -136,7 +136,7 @@ class feature_space_construction:
         
         if self.df_feature_values.shape[1] == len(self.dimensionality):
             
-            print('************************************************ Shape of the dimension list and feature variable count matched... proceeding for further extraction and feature expansion..************************************************ \n')
+            if self.disp: print('************************************************ Shape of the dimension list and feature variable count matched... proceeding for further extraction and feature expansion..************************************************ \n')
             
         else:
             
@@ -153,7 +153,7 @@ class feature_space_construction:
                 
             result[value].append(index)
         
-        print('************************************ Extraction of dimensionless and same dimension variables is completed!!.. ********************************************** \n')
+        if self.disp: print('************************************ Extraction of dimensionless and same dimension variables is completed!!.. ********************************************** \n')
         
         if symbols('1') in result.keys():
             
@@ -161,13 +161,13 @@ class feature_space_construction:
             
             del result[symbols('1')]
             
-            print(f'************************************************ {len(self.dimension_less)} dimension less feature variables found in the given list!! ************************************************ \n')
+            if self.disp: print(f'************************************************ {len(self.dimension_less)} dimension less feature variables found in the given list!! ************************************************ \n')
         
             self.dimensions_index_dict = result
             
             del result
             
-            #print(self.dimension_less,self.dimensions_index_dict)
+            #if self.disp: print(self.dimension_less,self.dimensions_index_dict)
             return self.dimensions_index_dict, self.dimension_less
         
         else:
@@ -193,7 +193,7 @@ class feature_space_construction:
             return target_string  # Return the target string itself if no other element is found
 
         # List comprehension to replace each target string with its other element
-        #print('Replaced the dimensions with the relational units..')
+        #if self.disp: print('Replaced the dimensions with the relational units..')
         
         return [find_other_element(target_string) for target_string in target_strings]
 
@@ -212,7 +212,7 @@ class feature_space_construction:
             
             non_dimensions =[]
             
-            print('****************************  Non-Dimension feature expansion is skipped because of no non-dimension features.... ********************************************************** \n ')
+            if self.disp: print('****************************  Non-Dimension feature expansion is skipped because of no non-dimension features.... ********************************************************** \n ')
             
             return feature_values_non_dimensional,feature_names_non_dimensional,non_dimensions
         
@@ -220,7 +220,7 @@ class feature_space_construction:
         
         non_dimensional_features = np.array(self.feature_names)[self.dimension_less]
         
-        print('******************************************************  Doing feature expansion of the non dimension feature variables... ******************************************************************** \n')
+        if self.disp: print('******************************************************  Doing feature expansion of the non dimension feature variables... ******************************************************************** \n')
         
         for op in self.operators:
             
@@ -489,7 +489,7 @@ class feature_space_construction:
             
             non_dimensions = [symbols('1')]*feature_values_non_dimensional.shape[1]
             
-            print('************************************************ Completed non dimensional feature expansion with features:', feature_values_non_dimensional.shape[1],'************************************************************** \n')
+            if self.disp: print('************************************************ Completed non dimensional feature expansion with features:', feature_values_non_dimensional.shape[1],'************************************************************** \n')
             
             return feature_values_non_dimensional, feature_names_non_dimensional,non_dimensions
             
@@ -498,7 +498,7 @@ class feature_space_construction:
             
     def dimension_to_non_dimension_feature_expansion(self):
         
-        print('************************************************ Starting the feature expansion for converting the dimensional to non dimensional features ************************************************ \n')
+        if self.disp: print('************************************************ Starting the feature expansion for converting the dimensional to non dimensional features ************************************************ \n')
         
         # We are converting dimensional feature space to non-dimensional feature space
         dim_to_non_dim_feature_values = torch.empty(self.df.shape[0],0).to(self.device)
@@ -603,7 +603,7 @@ class feature_space_construction:
         
         dim_to_non_dim_units = [symbols('1')]*dim_to_non_dim_feature_values.shape[1]
         
-        print('************************************************ Dimension to nondimension feature expansion completed.... with feature space size:', dim_to_non_dim_feature_values.shape[1],'************************************************ \n')
+        if self.disp: print('************************************************ Dimension to nondimension feature expansion completed.... with feature space size:', dim_to_non_dim_feature_values.shape[1],'************************************************ \n')
         
         
         return dim_to_non_dim_feature_values, dim_to_non_dim_feature_names,dim_to_non_dim_units
@@ -1036,7 +1036,7 @@ class feature_space_construction:
                     dimension_features_values = torch.cat((dimension_features_values,transformed_features),dim=1)
                     
                     dimension_features_names.extend(transformed_feature_names)
-                    #print('operators:',op,'featurenames:',len(dimension_features_names),'feature_values:',dimension_features_values.shape,'dimension_values:',len(dimension_values))
+                    #if self.disp: print('operators:',op,'featurenames:',len(dimension_features_names),'feature_values:',dimension_features_values.shape,'dimension_values:',len(dimension_values))
             
         nan_columns = torch.any(torch.isnan(dimension_features_values), dim=0)
         
@@ -1053,7 +1053,7 @@ class feature_space_construction:
         #pdb.set_trace()
         
         
-        print('************************************************ Dimensional feature expansion completed.... with feature space size: ',dimension_features_values.shape[1],'************************************************ \n')
+        if self.disp: print('************************************************ Dimensional feature expansion completed.... with feature space size: ',dimension_features_values.shape[1],'************************************************ \n')
         
         if '/' not in self.operators:
             
@@ -1194,7 +1194,7 @@ class feature_space_construction:
         transformed_dimensions = screened_dimensions
         
         
-        print('************************************************ Inter dimensional feature expansion completed, with feature space size: ', transformed_features.shape[1],'************************************************ \n')
+        if self.disp: print('************************************************ Inter dimensional feature expansion completed, with feature space size: ', transformed_features.shape[1],'************************************************ \n')
         
         return transformed_features,transformed_feature_names,transformed_dimensions
         
@@ -1249,7 +1249,7 @@ class feature_space_construction:
         
         if self.no_of_operators == None:
             
-            print('************************************************ Implementing Autodepth and number of terms functionality... ************************************************ \n')
+            if self.disp: print('************************************************ Implementing Autodepth and number of terms functionality... ************************************************ \n')
             
             from Regressor_dimension import Regressor
             #import Regressor_dimension as srd
@@ -1290,9 +1290,9 @@ class feature_space_construction:
 
             end_time = time.time()
             
-            print('************************************************ Time taken for the initial feature expansion: ',end_time - start_time, ' seconds..************************************************ \n')
+            if self.disp: print('************************************************ Time taken for the initial feature expansion: ',end_time - start_time, ' seconds..************************************************ \n')
             
-            print('************************************************ Size of the feature space formed in the initial expansion',self.df_feature_values.shape[1],'************************************************ \n')
+            if self.disp: print('************************************************ Size of the feature space formed in the initial expansion',self.df_feature_values.shape[1],'************************************************ \n')
             
             self.dimension=None
             self.sis_features=None
@@ -1302,7 +1302,7 @@ class feature_space_construction:
             i = 2
             while True:
                 
-                print(f'************************************************ {i} Feature Expansion is Starting..!!!!!! ************************************************ \n')
+                if self.disp: print(f'************************************************ {i} Feature Expansion is Starting..!!!!!! ************************************************ \n')
                 start_time = time.time()
                 
                 # Get the dimension and non dimension variables... 
@@ -1337,9 +1337,9 @@ class feature_space_construction:
 
                 end_time = time.time()
                 
-                print('************************************************ Time taken for the initial feature expansion: ',end_time - start_time, ' seconds.. ************************************************ \n')
+                if self.disp: print('************************************************ Time taken for the initial feature expansion: ',end_time - start_time, ' seconds.. ************************************************ \n')
                 
-                print('************************************************ Size of the feature space formed in the initial expansion',self.df_feature_values.shape[1],'************************************************ \n')
+                if self.disp: print('************************************************ Size of the feature space formed in the initial expansion',self.df_feature_values.shape[1],'************************************************ \n')
                 
                 rmse,equation,r2 = Regressor(self.df_feature_values,self.Target_column,self.feature_names,self.dimensionality,self.dimension,self.sis_features,self.device,self.output_dim,metrics=self.metrics).regressor_fit()
                 
@@ -1349,18 +1349,18 @@ class feature_space_construction:
                     break
                 if i >=2 and self.df_feature_values.shape[1]>2500:
                     
-                    print('************************************************ Expanded feature space is::',self.df_feature_values.shape[1],'************************************************ \n')
+                    if self.disp: print('************************************************ Expanded feature space is::',self.df_feature_values.shape[1],'************************************************ \n')
                     
-                    print('************************************************ !!Warning:: Further feature expansions result in huge memory consumption and may result in crashing the system... ************************************************ \n')
+                    if self.disp: print('************************************************ !!Warning:: Further feature expansions result in huge memory consumption and may result in crashing the system... ************************************************ \n')
                     
                     response = input("Do you want to continue (yes/no)? ").strip().lower()
                     
                     if response == 'no': 
-                        print("\nExiting based on user input.")
+                        if self.disp: print("\nExiting based on user input.")
                         break
                 i = i+1
             return rmse,equation,r2
-        print('\nStarting the feature expansion for the given feature variables.... \n ')
+        if self.disp: print('\nStarting the feature expansion for the given feature variables.... \n ')
         
         for i in range(1,self.no_of_operators):
         
@@ -1398,9 +1398,9 @@ class feature_space_construction:
 
             end_time = time.time()
             
-            print(f'************************************************ Time taken for the {i} feature expansion: ',end_time - start_time, ' seconds.. ************************************************ \n')
+            if self.disp: print(f'************************************************ Time taken for the {i} feature expansion: ',end_time - start_time, ' seconds.. ************************************************ \n')
             
-            print(f'************************************************ Size of the feature space formed in the {i} expansion',self.df_feature_values.shape[1],'************************************************ \n')
+            if self.disp: print(f'************************************************ Size of the feature space formed in the {i} expansion',self.df_feature_values.shape[1],'************************************************ \n')
             
             
         return self.df_feature_values,self.Target_column,self.feature_names,self.dimensionality

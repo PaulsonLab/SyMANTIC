@@ -24,8 +24,8 @@ class feature_space_construction:
   '''
   def __init__(self,operators,df,no_of_operators=None,device='cpu',initial_screening=None,metrics=[0.06,0.995]):
 
-    print(f'************************************************ Starting Feature Space Construction in {device} ************************************************ \n')
-    print('\n')
+    if self.disp: print(f'************************************************ Starting Feature Space Construction in {device} ************************************************ \n')
+    if self.disp: print('\n')
     '''
     ###########################################################################################
 
@@ -337,7 +337,7 @@ class feature_space_construction:
           self.feature_values_binary = torch.cat((self.feature_values_binary,self.feature_values11),dim=1)
           self.feature_names_binary.extend(feature_names_11)
           del self.feature_values11,feature_names_11
-          #print('Operator::',op,time.time()-s)
+          #if self.disp: print('Operator::',op,time.time()-s)
       
       #Checking whether the lists are empty
       if len(self.feature_names_binary) == 0:
@@ -390,7 +390,7 @@ class feature_space_construction:
 
     #Initial check on the dimension
     if self.no_of_operators !=None and self.no_of_operators+1 > 9: 
-        print('****************************************************** \n','WARNING!!!!::: With the current configurations there is a chance of requiring high memory', '******************************************************* \n')
+        if self.disp: print('****************************************************** \n','WARNING!!!!::: With the current configurations there is a chance of requiring high memory', '******************************************************* \n')
         response = input("Do you wish to continue (yes/no)? ").strip().lower()
         
         if response == 'no': 
@@ -406,7 +406,7 @@ class feature_space_construction:
     
     if self.no_of_operators == None:
         
-        print('************************************************ Implementing Automatic Expansion and construction of sparse models..!!! ************************************************ \n')
+        if self.disp: print('************************************************ Implementing Automatic Expansion and construction of sparse models..!!! ************************************************ \n')
         
         
         from Regressor import Regressor
@@ -434,9 +434,9 @@ class feature_space_construction:
         
         del features_created,names2
         
-        print('************************************************ Initial Feature Expansion Completed with feature space size:::',self.df_feature_values.shape[1],'************************************************ \n')
+        if self.disp: print('************************************************ Initial Feature Expansion Completed with feature space size:::',self.df_feature_values.shape[1],'************************************************ \n')
         
-        print('************************************************ Time taken to create the space is:::', time.time()-start_time, ' Seconds... ************************************************ \n')
+        if self.disp: print('************************************************ Time taken to create the space is:::', time.time()-start_time, ' Seconds... ************************************************ \n')
         
         
         self.dimension=None
@@ -449,7 +449,7 @@ class feature_space_construction:
         
         while True:
             
-            print(f'************************************************ {i} Feature Expansion is Starting..!!!!!! ************************************************ \n ')
+            if self.disp: print(f'************************************************ {i} Feature Expansion is Starting..!!!!!! ************************************************ \n ')
             
             values, names = self.combinations(basic_operators,i)
         
@@ -470,9 +470,9 @@ class feature_space_construction:
             
             del features_created,names2
             
-            print(f'************************************************ {i} Feature Expansion Completed with feature space size:::',self.df_feature_values.shape[1],'************************************************ \n')
+            if self.disp: print(f'************************************************ {i} Feature Expansion Completed with feature space size:::',self.df_feature_values.shape[1],'************************************************ \n')
             
-            print('************************************************ Time taken to create the space is:::', time.time()-start_time, ' Seconds...************************************************ \n')
+            if self.disp: print('************************************************ Time taken to create the space is:::', time.time()-start_time, ' Seconds...************************************************ \n')
             
             rmse, equation,r2 =  Regressor(self.df_feature_values,self.Target_column,self.columns,self.dimension,self.sis_features,self.device,metrics = self.metrics).regressor_fit()
             
@@ -480,27 +480,27 @@ class feature_space_construction:
                 
                 if rmse1-0.02 <= rmse:
                     
-                    print('************************************************ The alternate equation that can be matched closely, If initial equation does not seem to be correct: ************************************************ \n')
+                    if self.disp: print('************************************************ The alternate equation that can be matched closely, If initial equation does not seem to be correct: ************************************************ \n')
                     
-                    print('************************************************ \n')
+                    if self.disp: print('************************************************ \n')
                     
-                    print('RMSE::',rmse1)
+                    if self.disp: print('RMSE::',rmse1)
                     
-                    print('Equation1::',equation1)
+                    if self.disp: print('Equation1::',equation1)
                     
                 
                 break
             if i >=2 and self.df_feature_values.shape[1]>1000:
                 
-                print('************************************************ Expanded feature space is::',self.df_feature_values.shape[1],'************************************************ \n')
+                if self.disp: print('************************************************ Expanded feature space is::',self.df_feature_values.shape[1],'************************************************ \n')
                 
-                print('************************************************ !!Warning:: Further feature expansions result in memory consumption, Please provide the input to consider feature expansion or to exit the run with the sparse models created!!! ************************************************ \n')
+                if self.disp: print('************************************************ !!Warning:: Further feature expansions result in memory consumption, Please provide the input to consider feature expansion or to exit the run with the sparse models created!!! ************************************************ \n')
                 
                 response = input("Do you wish to continue (yes/no)? ").strip().lower()
                 
                 if response == 'no': 
                     
-                    print("Exiting based on user input.")
+                    if self.disp: print("Exiting based on user input.")
                     
                     break
             i = i+1
@@ -513,7 +513,7 @@ class feature_space_construction:
             
             start_time = time.time()
             
-            print(f'************************************************ Starting {i} level of feature expansion...************************************************ \n')
+            if self.disp: print(f'************************************************ Starting {i} level of feature expansion...************************************************ \n')
     
             #Performs the feature space expansion based on the binary operator set provided
             values, names = self.combinations(basic_operators,i)
@@ -535,9 +535,9 @@ class feature_space_construction:
             
             del features_created,names2
             
-            print(f'************************************************ {i} Feature Expansion Completed with feature space size:::',self.df_feature_values.shape[1],'************************************************ \n')
+            if self.disp: print(f'************************************************ {i} Feature Expansion Completed with feature space size:::',self.df_feature_values.shape[1],'************************************************ \n')
             
-            print('************************************************ Time taken to create the space is:::', time.time()-start_time, ' Seconds...************************************************ \n')
+            if self.disp: print('************************************************ Time taken to create the space is:::', time.time()-start_time, ' Seconds...************************************************ \n')
             
             
         return self.df_feature_values, self.Target_column,self.columns

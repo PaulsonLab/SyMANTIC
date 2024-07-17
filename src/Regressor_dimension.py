@@ -84,7 +84,7 @@ class Regressor:
             x = pd.Series(self.names)
             
             self.names = x.iloc[self.dimension_less].tolist()
-            #print(self.names)
+            #if self.disp: print(self.names)
             
             
 
@@ -285,13 +285,13 @@ class Regressor:
         if self.output_dim in result.keys():
             
             
-            print('************************************************ Extraction of target dimension feature variables found.., performing the regression!!.. ************************************************ \n')
+            if self.disp: print('************************************************ Extraction of target dimension feature variables found.., performing the regression!!.. ************************************************ \n')
             
             self.dimension_less = result[self.output_dim]
             
             del result[self.output_dim]
             
-            print(f'************************************************ {len(self.dimension_less)} output dimension feature variables found in the given list!! ************************************************ \n')
+            if self.disp: print(f'************************************************ {len(self.dimension_less)} output dimension feature variables found in the given list!! ************************************************ \n')
         
             self.dimensions_index_dict = result
             
@@ -302,7 +302,7 @@ class Regressor:
         
         else:
             
-            print('No target dimension feature variables found.. exiting the program..')
+            if self.disp: print('No target dimension feature variables found.. exiting the program..')
             sys.exit()
 
     '''
@@ -315,11 +315,11 @@ class Regressor:
     def regressor_fit(self):
         
         if self.x.shape[1] > self.sis_features*self.dimension :
-            print('\n')
-            print(f"************************************************ Starting SyMANTIC model in {self.device} ************************************************")
-            print('\n')
+            if self.disp: print('\n')
+            if self.disp: print(f"************************************************ Starting SyMANTIC model in {self.device} ************************************************")
+            if self.disp: print('\n')
         else:
-            print('************************************************ Given Number of features in SIS screening is greater than the feature space created, changing the SIS features to shape of features created ************************************************ \n')
+            if self.disp: print('************************************************ Given Number of features in SIS screening is greater than the feature space created, changing the SIS features to shape of features created ************************************************ \n')
             
             self.sis_features = int(self.x.shape[1])
             
@@ -395,11 +395,11 @@ class Regressor:
                     
                     equation =  coefficient+ '*' + str(self.names[int(selected_index)]) + '+' + str(float(intercept))
                     
-                    print('Equation: ', equation)
+                    if self.disp: print('Equation: ', equation)
                     
-                    print('RMSE: ', rmse)
+                    if self.disp: print('RMSE: ', rmse)
                     
-                    print('R2:',r2)
+                    if self.disp: print('R2:',r2)
                     
                 else:
                     
@@ -409,12 +409,12 @@ class Regressor:
                     
                     equation = coefficient + '*' + str(self.names[int(selected_index)])  + str(float(intercept))
                     
-                    print('Equation: ', equation)
+                    if self.disp: print('Equation: ', equation)
                     
-                    print('RMSE: ', rmse)
+                    if self.disp: print('RMSE: ', rmse)
                     
-                    print('R2::',r2)
-                #print('Time taken to generate one dimensional equation: ', time.time()-start_1D,'seconds')
+                    if self.disp: print('R2::',r2)
+                #if self.disp: print('Time taken to generate one dimensional equation: ', time.time()-start_1D,'seconds')
                 if self.device == 'cuda':torch.cuda.empty_cache()
                 
                 if rmse <= self.rmse_metric and r2>= self.r2_metric: return float(rmse),equation,r2
@@ -426,9 +426,9 @@ class Regressor:
                 equation =''
                 for k in range(len(terms)):
                     
-                    print(f'{k+1} term in the equation is {terms[k]}')
+                    if self.disp: print(f'{k+1} term in the equation is {terms[k]}')
                     
-                    print('\n')
+                    if self.disp: print('\n')
 
                     if coefs.flatten()[k] > 0:
                         
@@ -438,18 +438,18 @@ class Regressor:
                         
                         equation = equation + (str(terms[k])) + '  '
 
-                print('Equation: ',equation[:len(equation)-1])
-                print('\n')
+                if self.disp: print('Equation: ',equation[:len(equation)-1])
+                if self.disp: print('\n')
 
-                print('Intercept:', float(intercept))
-                print('\n')
+                if self.disp: print('Intercept:', float(intercept))
+                if self.disp: print('\n')
 
-                print('RMSE:',float(rmse))
-                print('\n')
+                if self.disp: print('RMSE:',float(rmse))
+                if self.disp: print('\n')
                 
-                print('R2::',r2)
+                if self.disp: print('R2::',r2)
 
-                print(f'Time taken for {i} dimension is: ', time.time()-start)
+                if self.disp: print(f'Time taken for {i} dimension is: ', time.time()-start)
                 
                 if self.device == 'cuda': torch.cuda.empty_cache()
                 

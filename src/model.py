@@ -28,7 +28,10 @@ from sklearn.model_selection import train_test_split
 
 class symantic_model:
 
-  def __init__(self,df,operators=None,multi_task = None,no_of_operators=None,dimension=None,sis_features=20,device='cpu',relational_units = None,initial_screening = None,dimensionality=None,output_dim = None,regressor_screening = None,metrics=[0.06,0.995]):
+  def __init__(self,df,operators=None,multi_task = None,no_of_operators=None,
+               dimension=None,sis_features=20,device='cpu',relational_units = None,
+               initial_screening = None,dimensionality=None,output_dim = None,
+               regressor_screening = None,metrics=[0.06,0.995],disp=False):
 
     self.operators = operators
     self.df=df
@@ -45,6 +48,7 @@ class symantic_model:
     self.regressor_screening = regressor_screening
     self.metrics   = metrics
     self.multi_task = multi_task
+    self.disp = disp
     if multi_task!=None:
         self.multi_task_target = multi_task[0]
         self.multi_task_features = multi_task[1]
@@ -59,14 +63,14 @@ class symantic_model:
         
         if self.multi_task!=None:
             
-            print('Performing MultiTask Symbolic regression!!..')
+            if self.disp: print('Performing MultiTask Symbolic regression!!..')
             
             equations =[]
             
             for i in range(len(self.multi_task_target)):
                 
                 #Get the target variable and feature variabls 
-                print('Performing symbolic regression of',i+1,'Target variables....')
+                if self.disp: print('Performing symbolic regression of',i+1,'Target variables....')
                 
                 list1 =[]
                 
@@ -80,12 +84,12 @@ class symantic_model:
                     
                     rmse,equation,r2 = fc.feature_space_construction(self.operators,df1,self.no_of_operators,self.device,self.initial_screening,self.metrics).feature_space()
                     
-                    print('************************************************ Autodepth regression completed in::', time.time()-st,'seconds ************************************************ \n')
+                    if self.disp: print('************************************************ Autodepth regression completed in::', time.time()-st,'seconds ************************************************ \n')
                     
                     equations.append(equation)
                     
                     if i+1 == len(self.multi_task_target):
-                        print('Equations found::',equations)
+                        if self.disp: print('Equations found::',equations)
                         return rmse,equation,r2,equations
                     else:continue
                 
@@ -98,7 +102,7 @@ class symantic_model:
                     equations.append(equation)
                     
                     if i+1 == len(self.multi_task_target):
-                        print('Equations found::',equations)
+                        if self.disp: print('Equations found::',equations)
                         return rmse, equation, r2,equations
                     else: continue
                 
@@ -108,7 +112,7 @@ class symantic_model:
             
             rmse,equation,r2 = fc.feature_space_construction(self.operators,self.df,self.no_of_operators,self.device,self.initial_screening,self.metrics).feature_space()
             
-            print('************************************************ Autodepth regression completed in::', time.time()-st,'seconds ************************************************ \n')
+            if self.disp: print('************************************************ Autodepth regression completed in::', time.time()-st,'seconds ************************************************ \n')
             
             return rmse,equation,r2
                 
@@ -125,14 +129,14 @@ class symantic_model:
         
         if self.multi_task!=None:
             
-            print('************************************************ Performing MultiTask Symbolic regression!!..************************************************ \n')
+            if self.disp: print('************************************************ Performing MultiTask Symbolic regression!!..************************************************ \n')
             
             equations =[]
             
             for i in range(len(self.multi_task_target)):
                 
                 #Get the target variable and feature variabls 
-                print('************************************************ Performing symbolic regression of',i+1,'Target variables....************************************************ \n')
+                if self.disp: print('************************************************ Performing symbolic regression of',i+1,'Target variables....************************************************ \n')
                 
                 list1 =[]
                 
@@ -146,13 +150,13 @@ class symantic_model:
                     
                     rmse,equation,r2 = dfc.feature_space_construction(self.df,self.operators,self.relational_units,self.initial_screening,self.no_of_operators,self.device,self.dimensionality,self.metrics,self.output_dim).feature_expansion()
                     
-                    print('************************************************ Autodepth regression completed in::', time.time()-st,'seconds ************************************************ \n')
+                    if self.disp: print('************************************************ Autodepth regression completed in::', time.time()-st,'seconds ************************************************ \n')
                     
                     equations.append(equation)
                     
                     if i+1 == len(self.multi_task_target):
                         
-                        print('Equations found::',equations)
+                        if self.disp: print('Equations found::',equations)
                         
                         return rmse,equation,r2,equations
                     
@@ -162,14 +166,14 @@ class symantic_model:
                     
                     x,y,names,dim = dfc.feature_space_construction(self.df,self.operators,self.relational_units,self.initial_screening,self.no_of_operators,self.device,self.dimensionality).feature_expansion()
                     
-                    #print(names)
+                    #if self.disp: print(names)
                     rmse,equation,r2 = srd.Regressor(x,y,names,dim,self.dimension,self.sis_features,self.device,self.output_dim,self.regressor_screening).regressor_fit()
                     
                     equations.append(equation)
                     
                     if i+1 == len(self.multi_task_target):
                         
-                        print('Equations found::',equations)
+                        if self.disp: print('Equations found::',equations)
                         
                         return rmse, equation, r2,equations
                     
@@ -181,7 +185,7 @@ class symantic_model:
             
             rmse,equation,r2 = dfc.feature_space_construction(self.df,self.operators,self.relational_units,self.initial_screening,self.no_of_operators,self.device,self.dimensionality,self.metrics,self.output_dim).feature_expansion()
             
-            print('************************************************ Autodepth regression completed in::', time.time()-st,'seconds ************************************************ \n')
+            if self.disp: print('************************************************ Autodepth regression completed in::', time.time()-st,'seconds ************************************************ \n')
             
             return rmse,equation,r2
         
@@ -190,7 +194,7 @@ class symantic_model:
             
             x,y,names,dim = dfc.feature_space_construction(self.df,self.operators,self.relational_units,self.initial_screening,self.no_of_operators,self.device,self.dimensionality).feature_expansion()
             
-            #print(names)
+            #if self.disp: print(names)
             rmse,equation,r2 = srd.Regressor(x,y,names,dim,self.dimension,self.sis_features,self.device,self.output_dim,self.regressor_screening).regressor_fit()
             
             return rmse,equation,r2
