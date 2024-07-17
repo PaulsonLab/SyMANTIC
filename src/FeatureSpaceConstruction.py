@@ -24,10 +24,10 @@ class feature_space_construction:
   '''
   def __init__(self,operators,df,no_of_operators=None,device='cpu',initial_screening=None,metrics=[0.06,0.995], disp=False):
   
-  	self.disp=disp
+  	
 
-    if self.disp: print(f'************************************************ Starting Feature Space Construction in {device} ************************************************ \n')
-    if self.disp: print('\n')
+    if disp: print(f'************************************************ Starting Feature Space Construction in {device} ************************************************ \n')
+    if disp: print('\n')
     '''
     ###########################################################################################
 
@@ -56,6 +56,8 @@ class feature_space_construction:
     # Filter the dataframe by removing the categorical datatypes and zero variance feature variables
 
     self.df = self.df.select_dtypes(include=['float64','int64'])
+    
+    self.disp= disp
 
     # Compute the variance of each column
     variance = self.df.var()

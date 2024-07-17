@@ -34,7 +34,7 @@ class Regressor:
 
         ###################################################################################################################
         '''
-        self.disp = disp
+        
         self.device = device
         
         self.x = x.to(self.device)
@@ -42,6 +42,8 @@ class Regressor:
         self.y = y.to(self.device)
         
         self.names = names
+        
+        self.disp = disp
         
         if dimension !=None: 
             
