@@ -22,7 +22,9 @@ class feature_space_construction:
 
   ##############################################################################################################
   '''
-  def __init__(self,operators,df,no_of_operators=None,device='cpu',initial_screening=None,metrics=[0.06,0.995]):
+  def __init__(self,operators,df,no_of_operators=None,device='cpu',initial_screening=None,metrics=[0.06,0.995], disp=False):
+  
+  	self.disp=disp
 
     if self.disp: print(f'************************************************ Starting Feature Space Construction in {device} ************************************************ \n')
     if self.disp: print('\n')

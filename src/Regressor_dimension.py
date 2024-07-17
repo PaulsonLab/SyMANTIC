@@ -17,7 +17,7 @@ import pdb
 
 class Regressor:
     
-    def __init__(self,x,y,names,dimensionality,dimension=None,sis_features=10,device='cpu',output_dim=None,screening=None,metrics=[0.06,0.995]):
+    def __init__(self,x,y,names,dimensionality,dimension=None,sis_features=10,device='cpu',output_dim=None,screening=None,metrics=[0.06,0.995], disp=False):
 
         '''
         ###################################################################################################################
@@ -34,6 +34,7 @@ class Regressor:
 
         ###################################################################################################################
         '''
+        self.disp = disp
         self.device = device
         
         self.x = x.to(self.device)

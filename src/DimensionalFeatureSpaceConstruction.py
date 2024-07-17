@@ -37,7 +37,9 @@ class feature_space_construction:
     Define the function to get the variables
     '''
     
-    def __init__(self,df,operators=None,relational_units = None,initial_screening = None,no_of_operators=None,device='cpu',dimensionality=None,metrics=[0.06,0.995],output_dim=None):
+    def __init__(self,df,operators=None,relational_units = None,initial_screening = None,no_of_operators=None,device='cpu',dimensionality=None,metrics=[0.06,0.995],output_dim=None,disp=False:
+    
+      self.disp = disp    
     
       if self.disp: print(f'************************************* Starting Feature Space Construction in {device} ****************************************************************')
       if self.disp: print('\n')
