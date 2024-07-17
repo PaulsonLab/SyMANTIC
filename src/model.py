@@ -82,7 +82,7 @@ class symantic_model:
                     
                     st = time.time()
                     
-                    rmse,equation,r2 = fc.feature_space_construction(self.operators,df1,self.no_of_operators,self.device,self.initial_screening,self.metrics,self.disp).feature_space()
+                    rmse,equation,r2 = fc.feature_space_construction(self.operators,df1,self.no_of_operators,self.device,self.initial_screening,self.metrics,disp=self.disp).feature_space()
                     
                     if self.disp: print('************************************************ Autodepth regression completed in::', time.time()-st,'seconds ************************************************ \n')
                     
@@ -95,9 +95,9 @@ class symantic_model:
                 
                 else:
                     
-                    x,y,names = fc.feature_space_construction(self.operators,df1,self.no_of_operators,self.device,self.initial_screening,self.disp).feature_space()
+                    x,y,names = fc.feature_space_construction(self.operators,df1,self.no_of_operators,self.device,self.initial_screening,disp=self.disp).feature_space()
                     
-                    rmse, equation,r2 =  sr.Regressor(x,y,names,self.dimension,self.sis_features,self.device,self.disp).regressor_fit()
+                    rmse, equation,r2 =  sr.Regressor(x,y,names,self.dimension,self.sis_features,self.device,disp=self.disp).regressor_fit()
                     
                     equations.append(equation)
                     
@@ -110,7 +110,7 @@ class symantic_model:
             
             st = time.time()
             
-            rmse,equation,r2 = fc.feature_space_construction(self.operators,self.df,self.no_of_operators,self.device,self.initial_screening,self.metrics,self.disp).feature_space()
+            rmse,equation,r2 = fc.feature_space_construction(self.operators,self.df,self.no_of_operators,self.device,self.initial_screening,self.metrics,disp=self.disp).feature_space()
             
             if self.disp: print('************************************************ Autodepth regression completed in::', time.time()-st,'seconds ************************************************ \n')
             
@@ -119,9 +119,9 @@ class symantic_model:
             
         else:
             
-            x,y,names = fc.feature_space_construction(self.operators,self.df,self.no_of_operators,self.device,self.initial_screening,self.disp).feature_space()
+            x,y,names = fc.feature_space_construction(self.operators,self.df,self.no_of_operators,self.device,self.initial_screening,disp=self.disp).feature_space()
             
-            rmse, equation,r2 =  sr.Regressor(x,y,names,self.dimension,self.sis_features,self.device,self.disp).regressor_fit()
+            rmse, equation,r2 =  sr.Regressor(x,y,names,self.dimension,self.sis_features,self.device,disp=self.disp).regressor_fit()
         
             return rmse, equation, r2
   
@@ -164,10 +164,10 @@ class symantic_model:
                 
                 else:
                     
-                    x,y,names,dim = dfc.feature_space_construction(self.df,self.operators,self.relational_units,self.initial_screening,self.no_of_operators,self.device,self.dimensionality,self.disp).feature_expansion()
+                    x,y,names,dim = dfc.feature_space_construction(self.df,self.operators,self.relational_units,self.initial_screening,self.no_of_operators,self.device,self.dimensionality,disp=self.disp).feature_expansion()
                     
                     #if self.disp: print(names)
-                    rmse,equation,r2 = srd.Regressor(x,y,names,dim,self.dimension,self.sis_features,self.device,self.output_dim,self.regressor_screening,self.disp).regressor_fit()
+                    rmse,equation,r2 = srd.Regressor(x,y,names,dim,self.dimension,self.sis_features,self.device,self.output_dim,self.regressor_screening,disp=self.disp).regressor_fit()
                     
                     equations.append(equation)
                     
@@ -192,10 +192,10 @@ class symantic_model:
         
         else:
             
-            x,y,names,dim = dfc.feature_space_construction(self.df,self.operators,self.relational_units,self.initial_screening,self.no_of_operators,self.device,self.dimensionality,self.disp).feature_expansion()
+            x,y,names,dim = dfc.feature_space_construction(self.df,self.operators,self.relational_units,self.initial_screening,self.no_of_operators,self.device,self.dimensionality,disp=self.disp).feature_expansion()
             
             #if self.disp: print(names)
-            rmse,equation,r2 = srd.Regressor(x,y,names,dim,self.dimension,self.sis_features,self.device,self.output_dim,self.regressor_screening,self.disp).regressor_fit()
+            rmse,equation,r2 = srd.Regressor(x,y,names,dim,self.dimension,self.sis_features,self.device,self.output_dim,self.regressor_screening,disp=self.disp).regressor_fit()
             
             return rmse,equation,r2
 
