@@ -1,13 +1,18 @@
 #  <p align="center">SyMANTIC: An Efficient Symbolic Regression Method for Interpretable and Parsimonious Model Discovery in Science and Beyond
 
-![toc](https://i.ibb.co/4Nmvj3B/symantic-toc.jpg)
+![](https://i.ibb.co/4Nmvj3B/symantic-toc.jpg)
 
+SyMANTIC is a novel SR algorithm that efficiently identifies low-dimensional descriptors from an enormous set of candidates through a unique combination of mutual information-based feature selection, adaptive feature expansion, and recursively applied $\ell_0$-based sparse regression. Additionally, it employs an information-theoretic measure to produce a set of Pareto-optimal equations, each offering the best accuracy for a given complexity. This open-source implementation of SyMANTIC is built on the PyTorch ecosystem.
 
 ## Quick Start 
 
 
- A standard use case of the SyMANTIC code can be compactly written as follows:
+Install SyMANTIC and dependancies
+```bash
+pip install SyMANTIC
+```
 
+Import your data and use the following code to fit a SyMANTIC model and analyze the Pareto front
 ```python 
 # import SyMANTIC model class along with other useful packages
 from symantic import SymanticModel
@@ -28,6 +33,9 @@ rmse = res['utopia']['rmse']
 r2 = res['utopia']['r2']
 complexity = res['utopia']['complexity']
 ```
+
+
+Examples of SyMANTIC can be found in the Colab Notebook [SyMANTIC Examples](https://colab.research.google.com/drive/1dBc2QJeEjW0T8iobFU8F54Y25pxR7isG#scrollTo=60564135 )
 
 
 
