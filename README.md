@@ -35,7 +35,7 @@ complexity = res['utopia']['complexity']
 ```
 
 
-Examples of SyMANTIC can be found in the Colab Notebook [SyMANTIC Examples](https://colab.research.google.com/drive/1dBc2QJeEjW0T8iobFU8F54Y25pxR7isG#scrollTo=60564135 )
+Examples of SyMANTIC can be found in Examples folder and in the Colab Notebook [SyMANTIC Examples](https://colab.research.google.com/drive/1dBc2QJeEjW0T8iobFU8F54Y25pxR7isG#scrollTo=60564135 )
 
 
 
