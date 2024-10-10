@@ -27,7 +27,7 @@ model = SymanticModel(df=df, #defines the dataframe,
                       n_epxansion = None, (default) # Defines the number of feature expansions, if a value is provided then
                       n_term = None, #defines the sparsity that needs to be considered for building models
                       sis_features = 20, (default) # defines the number of features to be screened from the expanded feature space
-                      dimensionality = ['u1','u2','u3'], #Defines the units of the feature variables in string representation which later converted into sympy format to do                                                            #the meaningful feature construction.
+                      dimensionality = ['u1','u2','u3'], #Defines the units of the feature variables in string representation which later converted into sympy format to do the meaningful feature construction.
                       relational_units = [(symbols('u1')*symbols('u2'),symbols('u3)], #Defines the list of tuples where each tuple represents the relational transformation.
                       output_dim = (symbols('u1')*symbols('u1')), #Defines the units of the target variable which helps in narrowing down the space for Regularization.
                       initial_screening = ["mi" or "spearman", quantile value], #Defines the feature screening option for high dimensional and 1-quantile_value defines
