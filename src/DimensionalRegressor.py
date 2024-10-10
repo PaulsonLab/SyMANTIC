@@ -34,12 +34,13 @@ import sympy as sp
 
 import numpy as np
 
+
 from .pareto_new import pareto
 
 
 class Regressor:
     
-    def __init__(self,x,y,names,complexity,dimension=None,sis_features=10,device='cpu',metrics =[0.06,0.995],disp=False,quantiles = None):
+    def __init__(self,x,y,names,dimensionality,complexity,output_dim = None,dimension=None,sis_features=10,device='cpu',metrics =[0.06,0.995],disp=False,quantiles = None):
 
         '''
         ###################################################################################################################
@@ -60,8 +61,21 @@ class Regressor:
         
         self.complexity = complexity
         
+        self.dimensionality = dimensionality
+        
+        self.output_dim = output_dim
         
         self.names = names
+        
+        if self.output_dim!=None:
+            
+            self.get_dimensions_list()
+            
+            self.x = self.x[:,self.dimension_less]
+            
+            x = pd.Series(self.names)
+            
+            self.names = x.iloc[self.dimension_less].tolist()
         
         if dimension !=None: 
             
@@ -117,7 +131,6 @@ class Regressor:
         
         self.pareto_intercepts = torch.empty(0,)
         
-        
         if self.x.shape[1]>1000: self.sis_features1 = 1000
         
         else: self.sis_features1 = self.x.shape[1]
@@ -130,6 +143,45 @@ class Regressor:
         else: self.quantiles  = [0.10, 0.20, 0.3,0.40,0.50,0.60,0.70,0.80,0.90,1.0]
 
     
+
+    def get_dimensions_list(self):
+            
+            #get the same dimensions from the list along with their index position.. 
+            result ={}
+            
+            for index, value in enumerate(self.dimensionality):
+                
+                if value not in result:
+                    
+                    result[value] = []
+                    
+                result[value].append(index)
+                
+            
+            
+            if self.output_dim in result.keys():
+                
+                
+                #if self.disp: print('************************************************ Extraction of target dimension feature variables found.., performing the regression!!.. ************************************************ \n')
+                
+                self.dimension_less = result[self.output_dim]
+                
+                del result[self.output_dim]
+                
+                if self.disp: print(f'************************************************ {len(self.dimension_less)} output dimension feature variables found in the given list!! ************************************************ \n')
+            
+                self.dimensions_index_dict = result
+                
+                del result
+                
+                
+                return self.dimensions_index_dict, self.dimension_less
+            
+            else:
+                
+                if self.disp: print('No target dimension feature variables found.. exiting the program..')
+                sys.exit()
+
     '''
     #######################################################################################################
 
@@ -308,12 +360,12 @@ class Regressor:
             
             non_std_intercepts = self.y.mean().repeat(coeff1.shape[0]) -  ss2
             
+            
             self.earlier_pareto_rmse = torch.cat((self.earlier_pareto_rmse,features_rmse[s]),dim=0)
             
             self.earlier_pareto_r2 = torch.cat((self.earlier_pareto_r2,features_r2[s].flatten()),dim=0)
             
             self.earlier_pareto_complexity = torch.cat((self.earlier_pareto_complexity,comp2[s]))
-            
             
             if coeff.shape[1] == self.pareto_coeffs.shape[1]:
                 
@@ -354,7 +406,7 @@ class Regressor:
 
         for i in range(len(non_std_coeff.squeeze())):
             
-            ce = "{:.20f}".format(float(non_std_coeff.squeeze()[i]))
+            ce = "{:.10f}".format(float(non_std_coeff.squeeze()[i]))
             
             term = str(ce) + "*" + str(self.names[int(indices_min[i])])
             
@@ -377,13 +429,11 @@ class Regressor:
         if self.x.shape[1] > self.sis_features*self.dimension:
             
             if self.disp:
-                
                 print()
-                
                 #print(f"Starting sparse model building in {self.device} \n")
             
         else:
-            #print('!!Important:: Given Number of features in SIS screening is greater than the feature space created, changing the SIS features to shape of features created!!')
+            print('!!Important:: Given Number of features in SIS screening is greater than the feature space created, changing the SIS features to shape of features created!!')
             
             self.sis_features = self.x.shape[1]
             
@@ -444,8 +494,6 @@ class Regressor:
                 self.earlier_pareto_r2 = torch.cat((self.earlier_pareto_r2,torch.tensor([0.])),dim=0)
                 
                 self.pareto_names.extend([str(self.y_mean.tolist())])
-                
-                
 
                 for i in range(len(quantile_values)):
                     
@@ -556,6 +604,7 @@ class Regressor:
                     self.pareto_names.extend(np.array(self.names)[selected_indices.numpy()[s]].tolist())
                     
                     if non_std_sol[s].dim() ==1: 
+                        
                         coeff_ad = non_std_sol[s].unsqueeze(1)
                         
                         
@@ -598,10 +647,9 @@ class Regressor:
                     
                     coefficient = coef[1]/self.x_std[int(selected_index)]
                     
-                    coefficient = "{:.20f}".format(float(coefficient))
+                    coefficient = "{:.6f}".format(float(coefficient))
                     
                     equation = str(float(coefficient)) + '*' + str(self.names[int(selected_index)]) + '+' + str(float(intercept))
-                    
                     '''
                     if self.disp:
                         print('Equation: ', equation)
@@ -618,10 +666,9 @@ class Regressor:
                     
                     coefficient = coef[1]/self.x_std[int(selected_index)]
                     
-                    coefficient = "{:.20f}".format(float(coefficient))
+                    coefficient = "{:.6f}".format(float(coefficient))
                     
                     equation = str(float(coefficient)) + '*' + str(self.names[int(selected_index)])  + str(float(intercept))
-                    
                     '''
                     if self.disp:
                         print('Equation: ', equation)
@@ -641,8 +688,6 @@ class Regressor:
                 
                 if rmse <= self.rmse_metric and r2>= self.r2_metric: return float(rmse),equation,r2,self.earlier_pareto_rmse,self.earlier_pareto_complexity,self.pareto_names,self.pareto_intercepts,self.pareto_coeffs,self.earlier_pareto_r2
 
-                
-                if self.pareto_coeffs.dim()==1: self.pareto_coeffs = self.pareto_coeffs.unsqueeze(1)
                 
                 
             else:
@@ -679,13 +724,11 @@ class Regressor:
     
                     print(f'Time taken for {i} dimension is: ', time.time()-start)
                 '''
-                
+                #print('Intercept:',float(intercept))
                 if self.device == 'cuda': torch.cuda.empty_cache()
                 
                 if rmse <= self.rmse_metric and r2>= self.r2_metric: 
-                    
-                    #print("Intercept:",float(intercept))
-                    
+                    print("Intercept:",float(intercept))
                     return float(rmse),equation,r2,self.earlier_pareto_rmse,self.earlier_pareto_complexity,self.pareto_names,self.pareto_intercepts,self.pareto_coeffs,self.earlier_pareto_r2
 
         return float(rmse),equation,r2,self.earlier_pareto_rmse,self.earlier_pareto_complexity,self.pareto_names,self.pareto_intercepts,self.pareto_coeffs,self.earlier_pareto_r2
